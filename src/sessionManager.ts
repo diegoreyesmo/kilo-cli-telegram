@@ -89,3 +89,17 @@ export function cancelCurrentPrompt(chatId: number): void {
   state.activePromptId = undefined;
   state.status = 'idle';
 }
+
+/**
+ * Reset the session for `chatId`: cancel any running prompt, delete the
+ * existing session entry, and create a fresh one.
+ *
+ * Returns the new SessionState.  Safe to call when no session exists — behaves
+ * identically to `getOrCreateSession` in that case.
+ */
+export async function resetSession(chatId: number): Promise<SessionState> {
+  cancelCurrentPrompt(chatId);
+  sessions.delete(chatId);
+  logger.info({ chatId }, 'Session reset');
+  return getOrCreateSession(chatId);
+}
