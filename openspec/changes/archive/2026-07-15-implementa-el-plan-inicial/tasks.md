@@ -56,24 +56,24 @@ Chain strategy: stacked-to-main
 
 ### Phase 5: Message Renderer (event-rendering R1-R4)
 
-- [ ] 5.1 Create `src/messageRenderer.ts` — `MessageGroup` per-chat tracking: `thoughtMsgId`, `toolMsgId`, `finalMsgId`, `lastEditTime`
-- [ ] 5.2 Implement `renderEvent(ctx, event, sessionId)` — switch on SSE event type: reasoning→thought, tool_call→tool, tool_result→tool update, text.delta→accumulate, done→finalize (spec: event-rendering R1)
-- [ ] 5.3 Implement 500ms throttle: buffer deltas, schedule `setTimeout`, last-write-wins (spec: event-rendering R2)
-- [ ] 5.4 Implement 4096-char truncation with `… (truncated)` suffix; catch `400 Bad Request` on edit gracefully (spec: event-rendering R3-R4)
+- [x] 5.1 Create `src/messageRenderer.ts` — `MessageGroup` per-chat tracking: `thoughtMsgId`, `toolMsgId`, `finalMsgId`, `lastEditTime`
+- [x] 5.2 Implement `renderEvent(ctx, event, sessionId)` — switch on SSE event type: reasoning→thought, tool_call→tool, tool_result→tool update, text.delta→accumulate, done→finalize (spec: event-rendering R1)
+- [x] 5.3 Implement 500ms throttle: buffer deltas, schedule `setTimeout`, last-write-wins (spec: event-rendering R2)
+- [x] 5.4 Implement 4096-char truncation with `… (truncated)` suffix; catch `400 Bad Request` on edit gracefully (spec: event-rendering R3-R4)
 
 ### Phase 6: Interaction Handler (user-interaction R1-R4)
 
-- [ ] 6.1 Create `src/interactionHandler.ts` — `handlePermission(ctx, event)`: render tool name + input + Approve/Deny inline buttons (`approve:{id}`, `deny:{id}`) (spec: user-interaction R1)
-- [ ] 6.2 Implement `handleQuestion(ctx, event)`: render question + one button per option (`answer:{qid}:{option}`) (spec: user-interaction R2)
-- [ ] 6.3 Wire resolve calls: `kiloClient.permission.resolve()` on approve/deny, `kiloClient.question.answer()` on answer, delete interaction message after resolve (spec: user-interaction R3-R4)
+- [x] 6.1 Create `src/interactionHandler.ts` — `handlePermission(ctx, event)`: render tool name + input + Approve/Deny inline buttons (`approve:{id}`, `deny:{id}`) (spec: user-interaction R1)
+- [x] 6.2 Implement `handleQuestion(ctx, event)`: render question + one button per option (`answer:{qid}:{option}`) (spec: user-interaction R2)
+- [x] 6.3 Wire resolve calls: `kiloClient.permission.resolve()` on approve/deny, `kiloClient.question.answer()` on answer, delete interaction message after resolve (spec: user-interaction R3-R4)
 
 ### Phase 7: Bot Entrypoint & Wiring (bot-entrypoint R1-R4)
 
-- [ ] 7.1 Create `src/bot.ts` — Telegraf init with `TELEGRAM_BOT_TOKEN`, global `bot.catch()` error handler logging via pino (spec: bot-entrypoint R1)
-- [ ] 7.2 Implement `/start` command: `getOrCreateSession`, reply welcome message; `/new`: reset session; `/stop`: `cancelCurrentPrompt` (spec: bot-entrypoint R2-R3)
-- [ ] 7.3 Implement `bot.on('text')`: `cancelCurrentPrompt` → `getOrCreateSession` → `kiloClient.sendPrompt` → `subscribeToSessionEvents` with `renderEvent` callback
-- [ ] 7.4 Wire action routers: `bot.action(/approve:(.+)/)`, `bot.action(/deny:(.+)/)`, `bot.action(/answer:(.+):(.+)/)` → delegate to `interactionHandler` (spec: bot-entrypoint R4)
-- [ ] 7.5 Call `bot.launch()`, enable graceful stop on SIGINT/SIGTERM, log startup message
+- [x] 7.1 Create `src/bot.ts` — Telegraf init with `TELEGRAM_BOT_TOKEN`, global `bot.catch()` error handler logging via pino (spec: bot-entrypoint R1)
+- [x] 7.2 Implement `/start` command: `getOrCreateSession`, reply welcome message; `/new`: reset session; `/stop`: `cancelCurrentPrompt` (spec: bot-entrypoint R2-R3)
+- [x] 7.3 Implement `bot.on('text')`: `cancelCurrentPrompt` → `getOrCreateSession` → `kiloClient.sendPrompt` → `subscribeToSessionEvents` with `renderEvent` callback
+- [x] 7.4 Wire action routers: `bot.action(/approve:(.+)/)`, `bot.action(/deny:(.+)/)`, `bot.action(/answer:(.+):(.+)/)` → delegate to `interactionHandler` (spec: bot-entrypoint R4)
+- [x] 7.5 Call `bot.launch()`, enable graceful stop on SIGINT/SIGTERM, log startup message
 
 ---
 
