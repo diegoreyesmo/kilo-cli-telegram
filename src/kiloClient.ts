@@ -66,10 +66,25 @@ function createRawHttpClient(config?: Partial<KiloConfig>): RawKiloClient {
   const baseUrl = config?.baseUrl ?? process.env.KILO_SERVER_URL ?? 'http://127.0.0.1:4096';
   const base = baseUrl.replace(/\/+$/, ''); // strip trailing slashes
 
+  // Build Basic auth header from env vars (kilo serve convention).
+  // When KILO_SERVER_PASSWORD is set, kilo serve requires Basic auth.
+  // Default username is 'kilo', overridable via KILO_SERVER_USERNAME.
+  const serverPassword = process.env.KILO_SERVER_PASSWORD;
+  const serverUsername = process.env.KILO_SERVER_USERNAME ?? 'kilo';
+
+  function buildHeaders(): Record<string, string> {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (serverPassword) {
+      const credentials = Buffer.from(`${serverUsername}:${serverPassword}`).toString('base64');
+      headers['Authorization'] = `Basic ${credentials}`;
+    }
+    return headers;
+  }
+
   async function request(method: string, path: string, body?: unknown): Promise<unknown> {
     const res = await fetch(`${base}${path}`, {
       method,
-      headers: { 'Content-Type': 'application/json' },
+      headers: buildHeaders(),
       body: body ? JSON.stringify(body) : undefined,
     });
     if (!res.ok) {
