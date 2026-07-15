@@ -1,0 +1,23 @@
+{
+  "name": "kilo-cli-telegram",
+  "version": "0.1.0",
+  "description": "Telegram bot for Kilo Code CLI",
+  "main": "dist/bot.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/bot.js",
+    "dev": "ts-node src/bot.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "eventsource": "^3.0.7",
+    "pino": "^9.3.2",
+    "telegraf": "^4.16.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}
